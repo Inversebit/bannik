@@ -35,3 +35,11 @@ app.register_blueprint(mod_access)
 # Build the database:
 # This will create the database file using SQLAlchemy
 db.create_all()
+
+# Create initial key in DB
+from app.mod_access.models import AccessKey
+
+#initial_key = AccessKey('init', True)
+#db.session.add(initial_key)
+#db.session.commit()
+#print(initial_key)
