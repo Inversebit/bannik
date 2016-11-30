@@ -12,7 +12,7 @@ import binascii
 
 class AccessKey(Base):
 
-    __tablename__ = 'Access.AccessKeys'
+    __tablename__ = 'AccessKeys'
 
     key = db.Column(db.String(64), nullable=False)
     creator = db.Column(db.String(64), nullable=False)
@@ -26,10 +26,15 @@ class AccessKey(Base):
         if is_admin is None:
             is_admin = False
 
-        self.key = binascii.hexlify(os.urandom(32))
+        self.key = str(binascii.hexlify(os.urandom(32)), 'utf-8')
         self.creator = creator
         self.is_admin = is_admin
 
     def __repr__(self):
         return '<AccessKey\n\tId: {}\n\tKey: {},\n\tCreator:{},\n\tAdmin: {}>'.format(
             super(AccessKey, self).id, self.key, self.creator, self.is_admin)
+
+    @staticmethod
+    def is_authorized(app_key):
+        res = AccessKey.query.filter_by(key=app_key).first()
+        return not (res is None)
